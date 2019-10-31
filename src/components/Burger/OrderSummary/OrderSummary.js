@@ -5,7 +5,7 @@ import Button from "../../UI/Button/Button"
 
 
 class OrderSummary extends Component {
-  componentWillUpdate() {
+  UNSAFE_componentWillUpdate() {
     console.log("[OrderSummary] willUpdate")
   }
   render() {
