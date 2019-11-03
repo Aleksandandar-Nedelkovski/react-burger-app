@@ -6,18 +6,25 @@ import Aux from "../Aux/Aux";
 const withErrorHandler = (WrappedComponent, axios) => {
   return class extends Component {
     state = {
-      error: null
+      error: null,
+      // reqInteceptor:
     }
 
-    componentWillMount() {
-      axios.interceptors.response.use(req => {
+    UNSAFE_componentWillMount() {
+      this.reqInteceptor = axios.interceptors.response.use(req => {
         this.setState({ error: null });
         return req;
       });
-      axios.interceptors.response.use(res => res, error => {
+      this.resInteceptor = axios.interceptors.response.use(res => res, error => {
         this.setState({ error: error });
         return error;
       });
+    }
+
+    componentWillUnmount() {
+      console.log("[withErrorHandler] WillUnmount", this.reqInteceptor, this.resInteceptor);
+      axios.interceptors.request.eject(this.reqInteceptor)
+      axios.interceptors.response.eject(this.reqInteceptor)
     }
 
     errorConfirmedHandler = () => {
@@ -36,7 +43,7 @@ const withErrorHandler = (WrappedComponent, axios) => {
         </Aux>
       )
     }
-  }
+  };
 }
 
 export default withErrorHandler
